@@ -33,6 +33,12 @@ oc import-image custom-jenkins --from=docker.io/clrxm/custom-jenkins --confirm -
 oc new-app jenkins-ephemeral -p NAMESPACE=custom-jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest
 ```
 
+*As it is shown in the section "Latest Openshift Jenkins Image" you can directly build your docker image in Openshift if your dockerfile is available in a git repository.*
+```
+oc new-build https://github.com/clerixmaxime/custom-jenkins.git \
+   --context-dir=/Dockerfile --strategy=docker
+```
+
 ### Using custom template
 1. Repeat steps 1, 2, & 3 above.
 1. In OpenShift, create a new project
@@ -80,7 +86,12 @@ Building the last version of the openshift/jenkins image, an environment variabl
 ```
 oc new-project custom-jenkins-image
 ```
-1. Import the image in Openshift as an ImageStream **(The image has already been built and is available on my Docker Hub. Refer to ttps://github.com/openshift/jenkins to build the image on your own or retag my image and add it to your own registry)**
+1. Get image in OpenShift
+  * Build the image directly in Openshift (This will build the image from a Dockerfile locate on a Git repository and create the ImageStream associated)
+  ```
+  oc new-build https://github.com/dwojciec/jenkins-official.git --context-dir=/2 --strategy=docker
+  ```
+  * Import the image in Openshift as an ImageStream **(The image has already been built and is available on my Docker Hub. Refer to ttps://github.com/openshift/jenkins to build the image on your own or retag my image and add it to your own registry)**
 ```
 oc import-image jenkins --from=docker.io/clrxm/jenkins-2-centos7 --confirm
 ```
@@ -108,5 +119,3 @@ oc new-project custom-jenkins-pv
 ```
 oc new-app jenkins-persistent
 ```
-
-## storageClasses
