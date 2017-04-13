@@ -41,15 +41,15 @@ oc new-build https://github.com/clerixmaxime/custom-jenkins.git \
 
 ### Using custom template
 1. Repeat steps 1, 2, & 3 above.
-1. In OpenShift, create a new project
+2. In OpenShift, create a new project
 ```
 oc new-project custom-jenkins --display-name="Dockerfile Jenkins" --description="Demonstrate custom jenkins image with docker build"
 ```
-1. Import the custom template under directory Dockerfile
+3. Import the custom template under directory Dockerfile
 ```
 oc create -f https://raw.githubusercontent.com/clerixmaxime/custom-jenkins/Dockerfile/jenkins-docker-image-template.yml
 ```
-1. Deploy Jenkins. You have to specify the JENKINS_IMAGE to use as environement variable
+4. Deploy Jenkins. You have to specify the JENKINS_IMAGE to use as environement variable
 ```
 oc new-app jenkins-master-s2i -p JENKINS_IMAGE=docker.io/clrxm/custom-jenkins:latest
 ```
@@ -69,11 +69,11 @@ Note that the `./configuration` folder will be copied into `/var/lib/jenkins` fo
 ```
 oc new-project custom-jenkins-s2i
 ```
-1. Build the new custom-jenkins image using S2I jenkins image provided by OpenShift.
+2. Build the new custom-jenkins image using S2I jenkins image provided by OpenShift.
 ```
 oc new-build jenkins:2~https://github.com/clerixmaxime/custom-jenkins.git --context-dir=/s2i --name=custom-jenkins
 ```
-1. Deploy Jenkins using the OpenShift jenkins template
+3. Deploy Jenkins using the OpenShift jenkins template
 ```
 oc new-app jenkins-ephemeral \
      -p NAMESPACE=custom-jenkins-s2i  -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest
@@ -86,21 +86,22 @@ Building the last version of the openshift/jenkins image, an environment variabl
 ```
 oc new-project custom-jenkins-image
 ```
-1. Get image in OpenShift
-  * Build the image directly in Openshift (This will build the image from a Dockerfile locate on a Git repository and create the ImageStream associated)
+2. Get image in OpenShift
+  * **Build the image directly in Openshift** (This will build the image from a Dockerfile locate on a Git repository and create the ImageStream associated)
   ```
-  oc new-build https://github.com/dwojciec/jenkins-official.git --context-dir=/2 --strategy=docker
+  oc new-build https://github.com/dwojciec/jenkins-official.git \
+        --context-dir=/2 --strategy=docker
   ```
-  * Import the image in Openshift as an ImageStream **(The image has already been built and is available on my Docker Hub. Refer to ttps://github.com/openshift/jenkins to build the image on your own or retag my image and add it to your own registry)**
+  * **Import the image in Openshift** as an ImageStream *(The image has already been built and is available on my Docker Hub. Refer to ttps://github.com/openshift/jenkins to build the image on your own or retag my image and add it to your own registry)*
 ```
 oc import-image jenkins --from=docker.io/clrxm/jenkins-2-centos7 --confirm
 ```
-1. Download the template `jenkins-ephemeral-latest.json` under s2i
-1. Import the template
+3. Download the template `jenkins-ephemeral-latest.json` under s2i
+4. Import the template
 ```
 oc create -f jenkins-ephemeral-latest.json
 ```
-1. Deploy Jenkins using this template
+5. Deploy Jenkins using this template
 ```
 oc new-app jenkins-ephemeral-latest -p NAMESPACE=custom-jenkins-image -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p INSTALL_PLUGINS=blueocean:1.0.1
 ```
