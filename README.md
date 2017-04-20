@@ -89,8 +89,8 @@ oc new-project custom-jenkins-image
 2. Get image in OpenShift
   * **Build the image directly in Openshift** (This will build the image from a Dockerfile locate on a Git repository and create the ImageStream associated)
   ```
-  oc new-build https://github.com/dwojciec/jenkins-official.git \
-        --context-dir=/2 --strategy=docker
+  oc new-build https://github.com/openshift/jenkins.git \
+     --context-dir=/1 --strategy=docker
   ```
   * **Import the image in Openshift** as an ImageStream *(The image has already been built and is available on my Docker Hub. Refer to ttps://github.com/openshift/jenkins to build the image on your own or retag my image and add it to your own registry)*
 ```
